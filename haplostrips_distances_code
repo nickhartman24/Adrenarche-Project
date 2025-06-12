@@ -1,4 +1,4 @@
-#DESCRIPTION OF WHAT I'M DOING HERE. also include that it creates multiple different types of outputs, and link to og haplostrips. 
+#DESCRIPTION OF WHAT I'M DOING HERE. did this in a mac terminal, but in a conda environment. used bash throughout. also include that it creates multiple different types of outputs, and link to og haplostrips. 
 #WHAT THIS REQUIRES BEFORE STARTING. THINK ABOUT: INSTALLING HAPLOSTRIPS, CONDA ENVIRONEMT, ETC. SAMPLES_HAPLO FILE AND IT'S LAYOUT  
 
 #conduct haplostrips on gene CYB5A. Split into 4 groups because the figure creator aspect of Haplostrips is limited to a certain amount of populations allowed. 
