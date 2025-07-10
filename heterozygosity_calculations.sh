@@ -1,31 +1,57 @@
-#WHAT I'M DOING HERE - discuss heterozygosity measures for overall average and by superpopulation. 
+# This script has been created to quickly calculate heterozygosity rates for individuals in the 1000 Genomes Project for a select set of genes.
+# Input required for this script is a VCF of modern human genomes in the 1000 Genomes Project. 
+# This script provides outputs at multiple steps, including:
+# homozygosity rates for all individuals,
+# heterozygosity rates for all individuals, 
+# average homozygosity rate (one number), 
+# heterozygosity rates averaged by superpopulation (AFR, AMR, EUR, EAS, SAS). 
 
-#calculating the heterozygosity rate for the 1000 GP humans for each gene of interest. 
-#WHAT THIS DOES
-#Example using CYB5A
 
-# Start by creating a vcf of just the gene of interest
-bcftools view -r 18:71920819-71959110 /pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz -Oz -o CYB5A_1000GP_gene_region.vcf.gz
+#!/bin/bash
 
-#Calculate per-individual homozygosity rates - reporting the number of homozygous sites (will work backwards to heterozygosity later)
-# output has 5 columns - PUT THOSE COLUMN TITLES HERE
-vcftools --gzvcf CYB5A_1000GP_gene_region.vcf.gz --het --out CYB5A_1000GP_homozyg_freq
+# Format: "GENE:CHR:START-END"
+GENES=(
+  "CYB5A:18:71920819-71959110"
+  "HSD3B1:1:120049833-120057677"
+  "HSD3B2:1:119957773-119965657"
+  "CYP17A1:10:104590288-104597170"
+  "SULT2A1:19:48373724-48389572"
+)
 
-#To Calculate individual heterozygosity 
-awk 'NR>1 {print $1, ($4-$2)/$4}' CYB5A_1000GP_homozyg_freq.het > CYB5A_1000GP_indv_het_freq
+VCF_1000G="/pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/ALL.chr{CHR}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz"
+PANEL_FILE="/pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/integrated_call_samples_v3.20130502.ALL.panel"
 
-# To Calculate a single number for average heterozygosity across ALL samples 
-awk 'NR>1 {sum += ($4-$2)/$4; n++} END {print "Average heterozygosity:", sum/n}' CYB5A_1000GP_homozyg_freq.het > average_heterozygosity_ALL
 
-#To get heterozygosity by superpopulation:
-#first create a file with individual IDs and superpopulation
-awk '{print $1 "\t" $3}' /pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/integrated_call_samples_v3.20130502.ALL.panel > 1000GP_sample_superpop.txt
+# Get sample-to-superpopulation mapping once
+awk '{print $1 "\t" $3}' "$PANEL_FILE" > sample_superpop.txt
+sort sample_superpop.txt > sample_superpop.sorted.txt
 
-#Also will use the file "CYB5A_1000GP_indv_het_freq"
-#merge the sample_superpop.txt file with the indv_het file:
-sort CYB5A_1000GP_indv_het_freq > CYB5A_1000GP_indv_het.sorted.txt
-sort 1000GP_sample_superpop.txt > 1000GP_sample_superpop.sorted.txt
-join -1 1 -2 1 CYB5A_1000GP_indv_het.sorted.txt 1000GP_sample_superpop.sorted.txt > CYB5A_1000GP_het_rates_superpop.txt
+for gene_info in "${GENES[@]}"; do
+  GENE=$(echo $gene_info | cut -d: -f1)
+  CHR=$(echo $gene_info | cut -d: -f2)
+  REGION=$(echo $gene_info | cut -d: -f3)
 
-#average heterozygosity by superpopulation
-awk '{count[$3]++; sum[$3]+=$2} END {for (pop in sum) print pop, sum[pop]/count[pop]}' CYB5A_1000GP_het_rates_superpop.txt > CYB5A_heterozygosity_by_superpopulation.txt
+  VCF="${VCF_1000G/\{CHR\}/$CHR}"
+  VCF_OUT="${GENE}_1000GP_gene_region.vcf.gz"
+
+  # 1. Extract gene region
+  bcftools view -r "${CHR}:${REGION}" "$VCF" -Oz -o "$VCF_OUT"
+
+  # 2. Calculate per-individual HOMOzygosity
+  # Columns in .het are: INDV O(HOM) E(HOM) N(NM) F
+  vcftools --gzvcf "$VCF_OUT" --het --out "${GENE}_1000GP_homozyg_freq"
+
+  # 3. Calculate individual heterozygosity
+  awk 'NR>1 {print $1, ($4-$2)/$4}' "${GENE}_1000GP_homozyg_freq.het" > "${GENE}_1000GP_indv_het_freq"
+
+  # 4. Calculate average heterozygosity (all samples)
+  awk 'NR>1 {sum += ($4-$2)/$4; n++} END {print "Average heterozygosity:", sum/n}' "${GENE}_1000GP_homozyg_freq.het" > "${GENE}_average_heterozygosity_ALL.txt"
+
+  # 5. Merge sample IDs with superpop
+  sort "${GENE}_1000GP_indv_het_freq" > "${GENE}_1000GP_indv_het.sorted.txt"
+  join -1 1 -2 1 "${GENE}_1000GP_indv_het.sorted.txt" sample_superpop.sorted.txt > "${GENE}_het_rates_superpop.txt"
+
+  # 6. Average heterozygosity by superpopulation
+  awk '{count[$3]++; sum[$3]+=$2} END {for (pop in sum) print pop, sum[pop]/count[pop]}' "${GENE}_het_rates_superpop.txt" > "${GENE}_heterozygosity_by_superpopulation.txt"
+done
+
