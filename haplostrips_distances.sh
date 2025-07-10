@@ -32,8 +32,8 @@ GROUP2="Nea,IBS,ITU,STU,FIN,PUR,CLM"
 GROUP3="Nea,MXL,PEL,CDX,KHV,CHB,CHS,JPT,YRI"
 
 #VCF inputs
-VCF_1000G="/pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/ALL.chr{CHR}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz"
-VCF_NEAN="/pl/active/villanea_lab/data/archaic_data/vindija_VCF/ftp.eva.mpg.de/neandertal/Vindija/VCF/Vindija33.19/chr{CHR}_mq25_mapab100.vcf.gz"
+VCF_1000G="/pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/ALL.chr${CHR}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz"
+VCF_NEAN="/pl/active/villanea_lab/data/archaic_data/vindija_VCF/ftp.eva.mpg.de/neandertal/Vindija/VCF/Vindija33.19/chr${CHR}_mq25_mapab100.vcf.gz"
 SAMPLES="samples_haplo"
 CUTOFF=0.001
 
@@ -42,13 +42,11 @@ for gene_info in "${GENES[@]}"; do
   CHR=$(echo $gene_info | cut -d: -f2)
   REGION=$(echo $gene_info | cut -d: -f3)
 
-  VCF_1000G_FILE="${VCF_1000G/\{CHR\}/$CHR}"
-  VCF_NEAN_FILE="${VCF_NEAN/\{CHR\}/$CHR}"
 
   # Run Haplostrips for each group
-  python haplostrips.py -v "$VCF_1000G_FILE" -v "$VCF_NEAN_FILE" -P "$SAMPLES" -i "${CHR}:${REGION}" -p "$GROUP1" -c "$CUTOFF" -a -t -o "${GENE}_first_group"
-  python haplostrips.py -v "$VCF_1000G_FILE" -v "$VCF_NEAN_FILE" -P "$SAMPLES" -i "${CHR}:${REGION}" -p "$GROUP2" -c "$CUTOFF" -a -t -o "${GENE}_second_group"
-  python haplostrips.py -v "$VCF_1000G_FILE" -v "$VCF_NEAN_FILE" -P "$SAMPLES" -i "${CHR}:${REGION}" -p "$GROUP3" -c "$CUTOFF" -a -t -o "${GENE}_third_group"
+  python haplostrips.py -v "$VCF_1000G" -v "$VCF_NEAN" -P "$SAMPLES" -i "${CHR}:${REGION}" -p "$GROUP1" -c "$CUTOFF" -a -t -o "${GENE}_first_group"
+  python haplostrips.py -v "$VCF_1000G" -v "$VCF_NEAN" -P "$SAMPLES" -i "${CHR}:${REGION}" -p "$GROUP2" -c "$CUTOFF" -a -t -o "${GENE}_second_group"
+  python haplostrips.py -v "$VCF_1000G" -v "$VCF_NEAN" -P "$SAMPLES" -i "${CHR}:${REGION}" -p "$GROUP3" -c "$CUTOFF" -a -t -o "${GENE}_third_group"
 
   # Merge output
   head -n 1 $(ls ${GENE}*group.distances_tab | head -n 1) > "${GENE}_merged.distances_tab"
