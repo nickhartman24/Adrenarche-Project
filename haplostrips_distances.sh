@@ -26,6 +26,11 @@ GENES=(
   "SULT2A1:19:48373724-48389572"
 )
 
+for gene_info in "${GENES[@]}"; do
+  GENE=$(echo $gene_info | cut -d: -f1)
+  CHR=$(echo $gene_info | cut -d: -f2)
+  REGION=$(echo $gene_info | cut -d: -f3)
+  
 # Population groups (customize as needed)
 GROUP1="Nea,CEU,TSI,GBR,GIH,PJL,BEB"
 GROUP2="Nea,IBS,ITU,STU,FIN,PUR,CLM"
@@ -36,12 +41,6 @@ VCF_1000G="/pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/ALL.ch
 VCF_NEAN="/pl/active/villanea_lab/data/archaic_data/vindija_VCF/ftp.eva.mpg.de/neandertal/Vindija/VCF/Vindija33.19/chr${CHR}_mq25_mapab100.vcf.gz"
 SAMPLES="samples_haplo"
 CUTOFF=0.001
-
-for gene_info in "${GENES[@]}"; do
-  GENE=$(echo $gene_info | cut -d: -f1)
-  CHR=$(echo $gene_info | cut -d: -f2)
-  REGION=$(echo $gene_info | cut -d: -f3)
-
 
   # Run Haplostrips for each group
   python haplostrips.py -v "$VCF_1000G" -v "$VCF_NEAN" -P "$SAMPLES" -i "${CHR}:${REGION}" -p "$GROUP1" -c "$CUTOFF" -a -t -o "${GENE}_first_group"
