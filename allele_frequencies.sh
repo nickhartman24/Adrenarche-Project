@@ -1,4 +1,8 @@
-#Intro here, need to mention that this requires a pre-prepared positions.txt file and what that format is, 
+# This script is used to calculate the alternate allele frequencies of specific positions for each population in 1000 Genomes Project
+# This requires a prepared positions.txt file as an input. This file should have 4 columns (Chr, pos, REF, ALT). 
+# I used tabs to separate columns, and I did not use headers. 
+# This script also requires an integrated_call_samples_v3.20130502.ALL.panel from the 1000 Genomes Project. 
+# The output will list all human populations in alphabetical order, chr, pos, REF, ALT, and ALT allele frequency for that population. 
 
 
 #Extract your list of human samples
