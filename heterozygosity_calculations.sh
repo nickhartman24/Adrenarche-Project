@@ -18,9 +18,14 @@ GENES=(
   "SULT2A1:19:48373724-48389572"
 )
 
-VCF_1000G="/pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/ALL.chr{CHR}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz"
+for gene_info in "${GENES[@]}"; do
+  GENE=$(echo $gene_info | cut -d: -f1)
+  CHR=$(echo $gene_info | cut -d: -f2)
+  REGION=$(echo $gene_info | cut -d: -f3)
+  
+VCF="/pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/ALL.chr${CHR}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz"
 PANEL_FILE="/pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/integrated_call_samples_v3.20130502.ALL.panel"
-
+VCF_OUT="${GENE}_1000GP_gene_region.vcf.gz"
 
 # Get sample-to-superpopulation mapping once
 awk '{print $1 "\t" $3}' "$PANEL_FILE" > sample_superpop.txt
@@ -30,9 +35,6 @@ for gene_info in "${GENES[@]}"; do
   GENE=$(echo $gene_info | cut -d: -f1)
   CHR=$(echo $gene_info | cut -d: -f2)
   REGION=$(echo $gene_info | cut -d: -f3)
-
-  VCF="${VCF_1000G/\{CHR\}/$CHR}"
-  VCF_OUT="${GENE}_1000GP_gene_region.vcf.gz"
 
   # 1. Extract gene region
   bcftools view -r "${CHR}:${REGION}" "$VCF" -Oz -o "$VCF_OUT"
