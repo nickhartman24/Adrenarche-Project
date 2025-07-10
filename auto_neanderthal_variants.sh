@@ -4,59 +4,74 @@
 
 
 #!/bin/bash
-# number of nodes
-# we're doing one task per node
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-# Request to run on Villanea Lab node
 #SBATCH --qos=blanca-villanea
-##SBATCH --qos=preemptable
-# Request runtime:
 #SBATCH --time=01-00:00:00
-# Default resources are 1 core with 2.8GB of memory.
-# Use more memory (4GB):
-##SBATCH --mem=8G
-# Specify a job name:
-#SBATCH --job-name slurm_cyp17_bcftools
-# Specify an output file
-#SBATCH --output slurm_cyp17_bcftools.out
-# Run a command
+#SBATCH --mem=8G
+#SBATCH --job-name slurm_nea_african_bcftools
+#SBATCH --output slurm_nea_african_bcftools_%j.out
+
 module load bcftools
+module load vcftools
 
-## output files for each archaic, containing just the vcf data for the gene region
-bcftools view -Oz /pl/active/villanea_lab/data/archaic_data/altai_VCF/ftp.eva.mpg.de/neandertal/Vindija/VCF/Altai/chr19_mq25_mapab100.vcf.gz -r 19:48373724-48389572 -o sult2a_altai_Jan2025.vcf.gz
-bcftools index sult2a_altai_Jan2025.vcf.gz
+# Format: "GENE:CHR:START-END"
+REGIONS=(
+  "HSD3B1:1:120049833-120057677"
+  "HSD3B2:1:119957773-119965657"
+  "CYB5A:18:71920819-71959110"
+  "CYP17A1:10:104590288-104597170"
+  "SULT2A1:19:48373724-48389572"
+)
 
-bcftools view -Oz /pl/active/villanea_lab/data/archaic_data/vindija_VCF/ftp.eva.mpg.de/neandertal/Vindija/VCF/Vindija33.19/chr19_mq25_mapab100.vcf.gz -r 19:48373724-48389572 -o sult2a_vindija_Jan2025.vcf.gz
-bcftools index sult2a_vindija_Jan2025.vcf.gz
+for region in "${REGIONS[@]}"; do
+  GENE=$(echo $region | cut -d: -f1)
+  CHR=$(echo $region | cut -d: -f2)
+  COORDS=$(echo $region | cut -d: -f3)
 
-bcftools view -Oz /pl/active/villanea_lab/data/archaic_data/chagyrskaya_VCF/ftp.eva.mpg.de/neandertal/Chagyrskaya/VCF/chr19.noRB.vcf.gz -r 19:48373724-48389572 -o sult2a_chagyrskaya_Jan2025.vcf.gz
-bcftools index sult2a_chagyrskaya_Jan2025.vcf.gz
+# Inputs: VCF of each Neanderthal genome, and the modern human 1000 Genomes Project integrated genomes. A text file of the Yoruban (YRI) sample ids
+ALTAI_VCF="/pl/active/villanea_lab/data/archaic_data/altai_VCF/ftp.eva.mpg.de/neandertal/Vindija/VCF/Altai/chr${CHR}_mq25_mapab100.vcf.gz"
+VINDIJA_VCF="/pl/active/villanea_lab/data/archaic_data/vindija_VCF/ftp.eva.mpg.de/neandertal/Vindija/VCF/Vindija33.19/chr${CHR}_mq25_mapab100.vcf.gz"
+CHAGYRSKAYA_VCF="/pl/active/villanea_lab/data/archaic_data/chagyrskaya_VCF/ftp.eva.mpg.de/neandertal/Chagyrskaya/VCF/chr${CHR}.noRB.vcf.gz"
+MODERN_VCF="/pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/ALL.chr${CHR}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz"
+YRI_LIST="YRI_samples_IDs.txt"
 
-## merge the archaic gene regions into one file
-bcftools merge sult2a_altai_Jan2025.vcf.gz sult2a_vindija_Jan2025.vcf.gz sult2a_chagyrskaya_Jan2025.vcf.gz -Oz -o sult2a_merged_neanderthals_Jan2025.vcf.gz
-bcftools index sult2a_merged_neanderthals_Jan2025.vcf.gz
+ # 1. Extract archaic regions and index
+  bcftools view -Oz "$ALTAI_VCF" -r ${CHR}:${COORDS} -o ${GENE}_altai.vcf.gz
+  bcftools index ${GENE}_altai.vcf.gz
 
-## output a file for only YRI population for the gene region
-bcftools view -Oz /pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz -r 19:48373724-48389572 -S YRI_samples_IDs.txt -o sult2a_YRI_Jan2025.vcf.gz 
-bcftools index sult2a_YRI_Jan2025.vcf.gz
+  bcftools view -Oz "$VINDIJA_VCF" -r ${CHR}:${COORDS} -o ${GENE}_vindija.vcf.gz
+  bcftools index ${GENE}_vindija.vcf.gz
 
-## Filter the merged archaic file for snps
-bcftools filter -r 19:48373724-48389572 -i 'TYPE="snp"' sult2a_merged_neanderthals_Jan2025.vcf.gz -Oz -o sult2a_nea_snps_Jan2025.vcf.gz
-bcftools index sult2a_nea_snps_Jan2025.vcf.gz
+  bcftools view -Oz "$CHAGYRSKAYA_VCF" -r ${CHR}:${COORDS} -o ${GENE}_chagyrskaya.vcf.gz
+  bcftools index ${GENE}_chagyrskaya.vcf.gz
 
-## removing headers and filtering to only archaic snps chromosome and position outputs a file that is used in the next step 
-bcftools query -f '%CHROM\t%POS\n' sult2a_nea_snps_Jan2025.vcf.gz | awk '{print $1"\t"$2}' > sult2a_nea_snps_chr_pos_Jan2025.txt
+  # 2. Merge archaic regions
+  bcftools merge ${GENE}_altai.vcf.gz ${GENE}_vindija.vcf.gz ${GENE}_chagyrskaya.vcf.gz -Oz -o ${GENE}_merged_neanderthals.vcf.gz
+  bcftools index ${GENE}_merged_neanderthals.vcf.gz
 
-## using the previously created file, filter the full YRI gene region down to only positions that align with the archaic snps
-bcftools view -Oz -T sult2a_nea_snps_chr_pos_Jan2025.txt sult2a_YRI_Jan2025.vcf.gz -o filtered_sult2a_YRI_to_nea_snp_pos_Jan2025.vcf.gz
-bcftools index filtered_sult2a_YRI_to_nea_snp_pos_Jan2025.vcf.gz
+  # 3. Extract YRI region and index
+  bcftools view -Oz "$MODERN_VCF" -r ${CHR}:${COORDS} -S "$YRI_LIST" -o ${GENE}_YRI.vcf.gz
+  bcftools index ${GENE}_YRI.vcf.gz
 
-## merge the data for the archaics and the YRI individuals for the archaic snp positions
-bcftools merge sult2a_nea_snps_Jan2025.vcf.gz filtered_sult2a_YRI_to_nea_snp_pos_Jan2025.vcf.gz -Oz -o sult2a_snps_merged_nea_YRI_Jan2025.vcf.gz
-bcftools index sult2a_snps_merged_nea_YRI_Jan2025.vcf.gz
+  # 4. Filter merged archaic for SNPs
+  bcftools filter -r ${CHR}:${COORDS} -i 'TYPE="snp"' ${GENE}_merged_neanderthals.vcf.gz -Oz -o ${GENE}_nea_snps.vcf.gz
+  bcftools index ${GENE}_nea_snps.vcf.gz
 
-vcftools --gzvcf filtered_sult2a_YRI_to_nea_snp_pos_Jan2025.vcf.gz --freq --out sult2a_YRI_freq_at_nea_snp_pos
+  # 5. Output chr/pos list for archaic SNPs
+  bcftools query -f '%CHROM\t%POS\n' ${GENE}_nea_snps.vcf.gz | awk '{print $1"\t"$2}' > ${GENE}_nea_snps_chr_pos.txt
 
-vcftools --gzvcf sult2a_nea_snps_Jan2025.vcf.gz --freq --out sult2a_freq_nea_snps
+  # 6. Filter YRI VCF to only archaic SNP positions
+  bcftools view -Oz -T ${GENE}_nea_snps_chr_pos.txt ${GENE}_YRI.vcf.gz -o filtered_${GENE}_YRI_to_nea_snp_pos.vcf.gz
+  bcftools index filtered_${GENE}_YRI_to_nea_snp_pos.vcf.gz
+
+  # 7. Merge archaic SNPs with filtered YRI
+  bcftools merge ${GENE}_nea_snps.vcf.gz filtered_${GENE}_YRI_to_nea_snp_pos.vcf.gz -Oz -o ${GENE}_snps_merged_nea_YRI.vcf.gz
+  bcftools index ${GENE}_snps_merged_nea_YRI.vcf.gz
+
+  # 8. Allele frequencies
+  vcftools --gzvcf filtered_${GENE}_YRI_to_nea_snp_pos.vcf.gz --freq --out ${GENE}_YRI_freq_at_nea_snp_pos
+  vcftools --gzvcf ${GENE}_nea_snps.vcf.gz --freq --out ${GENE}_freq_nea_snps
+
+done
