@@ -12,7 +12,9 @@
 # 3 groups, with Vindija Neanderthal in each run as the reference genome. 
 # Because African populations are not expected to be introgressed, I only used Yorubans (YRI) to reduce noise.
 # I also did not include ASW and ACB populations for the same reason. 
-# The last portion of this script combines the .distances_tab files for the 3 groups into one, and sorts individuals by distance from Neanderthal.  
+# The last portion of this script combines the .distances_tab files for the 3 groups into one, and sorts individuals by distance from Neanderthal. 
+# A gene is considered potentially introgressed if (1) non-African individuals shared an identical haplotype with the Vindija Neanderthal (genetic distance = 0), 
+# and (2) all African individuals exhibited distinct haplotypes (genetic distance > 0) for the same region.
 
 
 #!/bin/bash
