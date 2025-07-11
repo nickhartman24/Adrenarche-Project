@@ -1,8 +1,24 @@
-#WHAT I'M DOING HERE
-# link to Witt's page 
+"""
+The original version of this script was written by Kelsey Witt in 2021 (https://github.com/kelsey-witt/archaic_pgx/tree/main). 
+This script contains modified versions of https://github.com/kelsey-witt/archaic_pgx/blob/main/archaic_allele_freqs_pharmacogenes_mp.py and 
+https://github.com/kelsey-witt/archaic_pgx/blob/main/compare_rare_afr_archaic.py. 
 
-#Create archaic subsets for each gene. Did Vindija, Altai, Chagyrskaya, and Denisovan
-#Hsd3b1 here, repeat for each gene of interest
+The first part of this script is titled "##Archaic Allele Frequencies", and is a modified 'archaic_allele_freqs_pharmacogenes_mp.py' script. 
+This part of this script has two purposes. The first uses the specified adrenarche genes and their coordinates
+to identify single nucleotide variants for each gene that are at low frequency in Africa, and the output of this is Gene + "_AFRrare_snp_freqs.csv".
+The second purpose is to output a file with all genotypes where at least one archaic individual has an alternate allele. This output is 
+"archaic_SNPs_at_rare_pos_" + Gene + ".csv"
+
+The last portion of this script is the modified "compare_rare_afr_archaic.py", under the section "##Compare_rare_afr_archaic". It takes the two 
+outputs from the first part of the script, and combines them to identify SNVs that are rare in Africa and shared with archaic humans. The output of this is 
+afile called "archaic_mp_nonafr_snp_freqs.csv". 
+This is a way to determine at what positions Neanderthals and the ancestral human allele are different, and could be candidates for alleles 
+with functional differences.
+"""
+
+#Inputs requires archaic subsets for each gene. Did Vindija, Altai, Chagyrskaya, and Denisovan. 
+# This is the example for HSD3B1, and need to be repeated for each gene of interest. 
+# After this, the script is automated. 
 bcftools view -r 1:120049833-120057677 -o Altai_hsd3b1.vcf.gz -O z /pl/active/villanea_lab/data/archaic_data/altai_VCF/ftp.eva.mpg.de/neandertal/Vindija/VCF/Altai/chr1_mq25_mapab100.vcf.gz
 
 bcftools view -r 1:120049833-120057677 -o Vindija_hsd3b1.vcf.gz -O z /pl/active/villanea_lab/data/archaic_data/vindija_VCF/ftp.eva.mpg.de/neandertal/Vindija/VCF/Vindija33.19/chr1_mq25_mapab100.vcf.gz
@@ -184,7 +200,7 @@ for adrenGene in adrenGenes:
     f.close()
 
 
-Compare_rare_afr_archaic
+##Compare_rare_afr_archaic
 adrenGenes = {"hsd3b1”,“hsd3b2","cyp17a1","sult2a1","cyb5a"}
 
 populations = ["AFR", "CHB", "JPT", "CHS", "CDX", "KHV", "CEU", "TSI", "FIN", "GBR", "IBS", "MXL", "PUR", "CLM", "PEL", "GIH", "PJL", "BEB", "STU", "ITU"]
