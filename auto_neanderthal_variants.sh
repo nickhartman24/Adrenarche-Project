@@ -1,4 +1,7 @@
-#WHAT I'M DOING HERE - NUCLEOTIDES NOT FOUND IN AFR POPULATIONS (PRESUMED TO BE ANCESTRAL) BUT ARE PRESENT IN NEANDERTHALS. using slurm. example here is using SULT2A1, including UTRs. 
+# This is a slurm script that automates the process of identifying Neanderthal alleles for specified genes. 
+# We use Yoruban (YRI) genomes from the 1000 Genomes Project, making the assumption that the REF allele is ancestral to modern humans if all YRI share the REF allele. 
+# We compare this to the three Neanderthal genomes. 
+# WHAT I'M DOING HERE - NUCLEOTIDES NOT FOUND IN AFR POPULATIONS (PRESUMED TO BE ANCESTRAL) BUT ARE PRESENT IN NEANDERTHALS. using slurm. example here is using SULT2A1, including UTRs. 
 
 #starting with a slurm script
 
@@ -37,7 +40,7 @@ CHAGYRSKAYA_VCF="/pl/active/villanea_lab/data/archaic_data/chagyrskaya_VCF/ftp.e
 MODERN_VCF="/pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/ALL.chr${CHR}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz"
 YRI_LIST="YRI_samples_IDs.txt"
 
- # 1. Extract archaic regions and index
+ # 1. Extract archaic vcf lines for each gene, and index
   bcftools view -Oz "$ALTAI_VCF" -r ${CHR}:${COORDS} -o ${GENE}_altai.vcf.gz
   bcftools index ${GENE}_altai.vcf.gz
 
@@ -51,7 +54,7 @@ YRI_LIST="YRI_samples_IDs.txt"
   bcftools merge ${GENE}_altai.vcf.gz ${GENE}_vindija.vcf.gz ${GENE}_chagyrskaya.vcf.gz -Oz -o ${GENE}_merged_neanderthals.vcf.gz
   bcftools index ${GENE}_merged_neanderthals.vcf.gz
 
-  # 3. Extract YRI region and index
+  # 3. From the full modern human vcf, filter to just YRI samples, and index
   bcftools view -Oz "$MODERN_VCF" -r ${CHR}:${COORDS} -S "$YRI_LIST" -o ${GENE}_YRI.vcf.gz
   bcftools index ${GENE}_YRI.vcf.gz
 
@@ -59,18 +62,18 @@ YRI_LIST="YRI_samples_IDs.txt"
   bcftools filter -r ${CHR}:${COORDS} -i 'TYPE="snp"' ${GENE}_merged_neanderthals.vcf.gz -Oz -o ${GENE}_nea_snps.vcf.gz
   bcftools index ${GENE}_nea_snps.vcf.gz
 
-  # 5. Output chr/pos list for archaic SNPs
+  # 5. Output chr/pos list for archaic SNPs, will be used in next step
   bcftools query -f '%CHROM\t%POS\n' ${GENE}_nea_snps.vcf.gz | awk '{print $1"\t"$2}' > ${GENE}_nea_snps_chr_pos.txt
 
   # 6. Filter YRI VCF to only archaic SNP positions
   bcftools view -Oz -T ${GENE}_nea_snps_chr_pos.txt ${GENE}_YRI.vcf.gz -o filtered_${GENE}_YRI_to_nea_snp_pos.vcf.gz
   bcftools index filtered_${GENE}_YRI_to_nea_snp_pos.vcf.gz
 
-  # 7. Merge archaic SNPs with filtered YRI
+  # 7. Merge archaic SNPs with filtered YRI. Not used for allele frequency, but is generally good to have this file with full vcf lines. 
   bcftools merge ${GENE}_nea_snps.vcf.gz filtered_${GENE}_YRI_to_nea_snp_pos.vcf.gz -Oz -o ${GENE}_snps_merged_nea_YRI.vcf.gz
   bcftools index ${GENE}_snps_merged_nea_YRI.vcf.gz
 
-  # 8. Allele frequencies
+  # 8. Allele frequencies for YRI and Neanderthals. "Unique Neanderthal variants" will be positions where YRI have a REF freq=1, and Nea have ALT freq=1. 
   vcftools --gzvcf filtered_${GENE}_YRI_to_nea_snp_pos.vcf.gz --freq --out ${GENE}_YRI_freq_at_nea_snp_pos
   vcftools --gzvcf ${GENE}_nea_snps.vcf.gz --freq --out ${GENE}_freq_nea_snps
 
