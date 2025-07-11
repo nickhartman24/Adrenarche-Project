@@ -1,11 +1,12 @@
-# This is a slurm script that automates the process of identifying Neanderthal alleles for specified genes. 
-# We use Yoruban (YRI) genomes from the 1000 Genomes Project, making the assumption that YRI has no archaic introgression, 
-# and that the REF allele is ancestral to modern humans if all YRI share the REF allele. 
-# We compare this to the three Neanderthal genomes. Alleles are determined to be "Unique Neanderthal variants" if all Neanderthals share the ALT allele 
-#(ALT freq=1), at positions where all YRI share the REF allele (REF freq=1). 
-# Inputs include VCFs for the three Neanderthal genomes, the integrated VCF with all 1000 Genomes Project modern human samples, and a list of the YRI sample IDs. 
-# Outputs include YRI .frq files and Neanderthal .frq files for snps in each specified gene. 
-
+"""
+This is a slurm script that automates the process of identifying Neanderthal alleles for specified genes. 
+We use Yoruban (YRI) genomes from the 1000 Genomes Project, making the assumption that YRI has no archaic introgression, 
+and that the REF allele is ancestral to modern humans if all YRI share the REF allele. 
+We compare this to the three Neanderthal genomes. Alleles are determined to be "Unique Neanderthal variants" if all Neanderthals share the ALT allele 
+(ALT freq=1), at positions where all YRI share the REF allele (REF freq=1). 
+Inputs include VCFs for the three Neanderthal genomes, the integrated VCF with all 1000 Genomes Project modern human samples, and a list of the YRI sample IDs. 
+Outputs include YRI .frq files and Neanderthal .frq files for snps in each specified gene. 
+"""
 
 #!/bin/bash
 #SBATCH --nodes=1
