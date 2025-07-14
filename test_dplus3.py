@@ -269,7 +269,7 @@ args.names_string="p1[NA06989.22.0]p2[HG00148]p3[Vindija33.19]"
 args.first_last_position_chromosome_file="/pl/active/villanea_lab/nickhart_data/dplus_test/first_last_position.csv"
 args.human_vcf="/pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz".format(args.chromosome)
 args.archaic_vcf="/pl/active/villanea_lab/data/archaic_data/vindija_VCF/ftp.eva.mpg.de/neandertal/Vindija/VCF/Vindija33.19/chr{}_mq25_mapab100.vcf.gz".format(args.chromosome)
-args.introgressed_infile="/pl/active/villanea_lab/data/modern_data/steinrucken_neanderthal_SNP_calls/CEU_calls/CEU_lax_chr{}_out.txt"
+args.introgressed_infile="/pl/active/villanea_lab/data/modern_data/steinrucken_neanderthal_SNP_calls/CEU_calls/CEU_lax_chr22_out.txt"
 #outfile="/pl/active/villanea_lab/nickhart_data/dplus_test/p1-${pop_one_name}_p2-${pop_two_name}_p3-${pop_three_name}-2013_window-${window_size}_${chromosome}.csv"
 
 args.d_statistic=True
