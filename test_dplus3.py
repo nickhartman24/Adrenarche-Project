@@ -172,34 +172,6 @@ def calculate_introgression_stats(dict,statistics_list):
       results["df"]=np.nan
     return results
 
-  if "D+" in statistics_list:
-    #D+ statistic
-    dict["dplus_numerator"]=((1-p_one)*p_two*p_three*(1-p_four)) - (p_one*(1-p_two)*p_three*(1-p_four))
-    dict["dplus_numerator"]+=(p_one*(1-p_two)*(1-p_three)*(1-p_four))-((1-p_one)*p_two*(1-p_three)*(1-p_four))
-    dict["dplus_denominator"]=((1-p_one)*p_two*p_three*(1-p_four))+(p_one*(1-p_two)*p_three*(1-p_four))
-    dict["dplus_denominator"]+=(p_one*(1-p_two)*(1-p_three)*(1-p_four))+((1-p_one)*p_two*(1-p_three)*(1-p_four))
-  if "fD" in statistics_list:
-    #fD statistic
-    dict["fd_numerator"]=((1-p_one)*p_two*p_three*(1-p_four)) - (p_one*(1-p_two)*p_three*(1-p_four))
-    #fD uses the max(p2,p3) as donor population
-    pd=max(p_two,p_three)
-    dict["fd_denominator"]=((1-p_one)*pd*pd*(1-p_four))-(p_one*(1-pd)*pd*(1-p_four))
-  if "fDM" in statistics_list:
-    #fDM statistic
-    dict["fdm_numerator"]=((1-p_one)*p_two*p_three*(1-p_four)) - (p_one*(1-p_two)*p_three*(1-p_four))
-    #fDM has the same denominator as fD when p_two is greater than or equal to p3
-    if p_one>=p_two:
-      pd_m=max(p_two,p_three)
-      dict["fdm_denominator"]=((1-p_one)*pd_m*pd_m*(1-p_four))-(p_one*(1-pd_m)*pd_m*(1-p_four))
-    elif p_one<p_two:
-      pd_m=max(p_one,p_three)
-      dict["fdm_denominator"]=(pd_m*(1-p_two)*pd_m*(1-p_four))-((1-pd_m)*p_two*pd_m*(1-p_four))
-  if "df" in statistics_list:
-    #Df statsitic
-    dict["df_numerator"]=((1-p_one)*p_two*p_three)-(p_one*(1-p_two)*p_three)
-    dict["df_denominator"]=(2*p_one*p_two*p_three)+((1-p_one)*p_two*p_three)+(p_one*(1-p_two)*p_three)
-  return(dict)
-
 def get_introgressed_region_for_haplotype(file_name, individual):
     introgressed_tracts = []
     with open(file_name, 'rt') as file:
