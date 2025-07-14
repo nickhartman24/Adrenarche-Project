@@ -123,9 +123,9 @@ def update_introgression_stats_sums(p_one,p_two,p_three,p_four,list):
   if p_one>=p_two:
     pd_m=max(p_two,p_three)
     dict["fdm_denominator"]=((1-p_one)*pd_m*pd_m*(1-p_four))-(p_one*(1-pd_m)*pd_m*(1-p_four))
-    elif p_one<p_two:
-      pd_m=max(p_one,p_three)
-      dict["fdm_denominator"]=(pd_m*(1-p_two)*pd_m*(1-p_four))-((1-pd_m)*p_two*pd_m*(1-p_four))
+  elif p_one<p_two:
+    pd_m=max(p_one,p_three)
+    dict["fdm_denominator"]=(pd_m*(1-p_two)*pd_m*(1-p_four))-((1-pd_m)*p_two*pd_m*(1-p_four))
   if "df" in list:
     #Df statsitic
     dict["df_numerator"]=((1-p_one)*p_two*p_three)-(p_one*(1-p_two)*p_three)
