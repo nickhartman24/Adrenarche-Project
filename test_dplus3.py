@@ -369,13 +369,12 @@ while (stop < (last - args.window_size)):
       data[position]["pop_one"]=vcf_row[human_individual_index_dict["pop1"]]
       data[position]["pop_two"]=vcf_row[human_individual_index_dict["pop2"]]
     else:
-      
-data[position]["pop_one_derived_freq"] =get_derived_freq_per_population(array=vcf_row[human_individual_index_dict["pop1"]]
+      data[position]["pop_one_derived_freq"] =get_derived_freq_per_population(array=vcf_row[human_individual_index_dict["pop1"]]
                     ,ancestral_allele=ancestral_allele,reference_allele=human_reference,alternative_allele=human_alternative)
       data[position]["pop_two_derived_freq"]=get_derived_freq_per_population(array=vcf_row[human_individual_index_dict["pop2"]]
                     ,ancestral_allele=ancestral_allele,reference_allele=human_reference,alternative_allele=human_alternative)
   #Positions for all four populations
-  positions_list=[]
+      positions_list=[]
   #Get data for archaic for altai nean
   for vcf_row in archaic_iterator:
     position=int(vcf_row[position_index])
