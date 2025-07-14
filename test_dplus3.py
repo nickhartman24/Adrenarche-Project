@@ -200,16 +200,19 @@ def calculate_introgression_stats(dict,statistics_list):
     dict["df_denominator"]=(2*p_one*p_two*p_three)+((1-p_one)*p_two*p_three)+(p_one*(1-p_two)*p_three)
   return(dict)
 
-def get_introgressed_region_for_haplotype(file_name,individual):
-  introgressed_tracts=[]
-  with open(file_name,'rt') as file:
-    for line in file:
-      if line.startswith("##"):
-        continue
-      spline=line.split()
-      if int(spline[1]) in individual:
-        introgressed_tracts.append((int(spline[2]),int(spline[3])))
-  return introgressed_tracts
+def get_introgressed_region_for_haplotype(file_name, individual):
+    introgressed_tracts = []
+    with open(file_name, 'rt') as file:
+        for line in file:
+            if line.startswith("##") or line.startswith("#"):
+                continue
+            spline = line.split()
+            # Skip header or lines where position is not a digit
+            if not spline or not spline[1].isdigit():
+                continue
+            if int(spline[1]) in individual:
+                introgressed_tracts.append((int(spline[2]), int(spline[3])))
+    return introgressed_tracts
 
 def get_introgressed_region_for_frequencies(file_name, chromosome):
     introgressed_tracts = []
