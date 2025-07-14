@@ -423,15 +423,25 @@ while (stop < (last - args.window_size)):
                                            ,list=statistics_list)
       stats_components={k: stats_components.get(k,0)+intro_dict.get(k,0) for k in intro_dict.keys()}
   #Next window if window empty
-  if len(positions_list)==0:
-    start= stop + 1; stop = start+args.window_size
-    continue
-  #Output results to outfile
-  
-outline = outfile_delim.join([args.chromosome, str(start), str(stop), str(len(positions_list)), str(introgressed_bases), str(introgressed_bases/args.window_size)])
-  if args.haplotype:
-  for combo in haplotype_combinations:
-      results[combo]=calculate_introgression_stats(allele_sites[combo],statistics_list)
+  if len(positions_list) == 0:
+        start = stop + 1
+        stop = start + args.window_size
+        continue
+
+    # Output results to outfile
+    outline = outfile_delim.join([
+        args.chromosome,
+        str(start),
+        str(stop),
+        str(len(positions_list)),
+        str(introgressed_bases),
+        str(introgressed_bases / args.window_size)
+    ])
+    outfile.write(outline + '\n')  # <-- Make sure you are writing to the output file
+
+    if args.haplotype:
+        for combo in haplotype_combinations:
+            results[combo] = calculate_introgression_stats(allele_sites[combo], statistics_list)
       #Get introgressed bases per window
       introgressed_bases=np.sum([number_intro_bases(window_start,window_stop,intro_tracts[0],intro_tracts[1]) for intro_tracts in introgressed_tracts[haplotype_combinations[combo][1]]])
       outline+="{}{}".format(outfile_delim, outfile_delim.join([combo, str(introgressed_bases), str(introgressed_bases / args.window_size)]))
