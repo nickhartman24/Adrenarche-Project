@@ -170,9 +170,8 @@ def calculate_introgression_stats(dict,statistics_list):
       results["df"]=dict["df_numerator"]/dict["df_denominator"]
     except ZeroDivisionError:
       results["df"]=np.nan
-  return results
+    return results
 
-    dict["d_denominator"]=((1-p_one)*p_two*p_three*(1-p_four))+(p_one*(1-p_two)*p_three*(1-p_four))
   if "D+" in list:
     #D+ statistic
     dict["dplus_numerator"]=((1-p_one)*p_two*p_three*(1-p_four)) - (p_one*(1-p_two)*p_three*(1-p_four))
