@@ -429,15 +429,14 @@ while (stop < (last - args.window_size)):
         continue
 
     # Output results to outfile
-    outline = outfile_delim.join([
+        outline = outfile_delim.join([
         args.chromosome,
         str(start),
         str(stop),
         str(len(positions_list)),
         str(introgressed_bases),
-        str(introgressed_bases / args.window_size)
-    ])
-    outfile.write(outline + '\n')  # <-- Make sure you are writing to the output file
+        str(introgressed_bases / args.window_size)])
+        outfile.write(outline + '\n')  # <-- Make sure you are writing to the output file
 
     if args.haplotype:
         for combo in haplotype_combinations:
