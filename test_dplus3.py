@@ -310,8 +310,8 @@ allele_sites_list=["ABBA","BABA","BAAA","ABAA"]
 
 #Introgressed sites
 if args.haplotype:
-  haplotype_string="_"
- haplotype_indexes=[int(haplotype_index) for haplotype_index in args.haplotype_index.split(haplotype_string)[:2]]
+    haplotype_string = "_"
+    haplotype_indexes = [int(haplotype_index) for haplotype_index in args.haplotype_index.split(haplotype_string)[:2]]
   introgressed_tracts={}
   introgressed_tracts[0]=get_introgressed_region_for_haplotype(file_name=args.introgressed_infile,individual=[haplotype_indexes[0]])
   introgressed_tracts[1]=get_introgressed_region_for_haplotype(file_name=args.introgressed_infile,individual=[haplotype_indexes[1]])
