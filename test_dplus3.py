@@ -348,6 +348,7 @@ while (stop < (last - args.window_size)):
   allele_sites=defaultdict(lambda: defaultdict(int))
   results=defaultdict(None)
   stats_components=defaultdict(int)
+  positions_list = []
   #Get iterators for human and archaic vcfs
   human_iterator = tb.query(str(args.chromosome), start, stop)
   archaic_iterator = atb.query(str(args.chromosome), start, stop)
