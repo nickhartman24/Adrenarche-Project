@@ -170,7 +170,7 @@ def calculate_introgression_stats(dict,statistics_list):
       results["df"]=dict["df_numerator"]/dict["df_denominator"]
     except ZeroDivisionError:
       results["df"]=np.nan
-    return results
+  return results
 
 def get_introgressed_region_for_haplotype(file_name, individual):
     introgressed_tracts = []
