@@ -202,7 +202,7 @@ def calculate_introgression_stats(dict,statistics_list):
 
 def get_introgressed_region_for_haplotype(file_name,individual):
   introgressed_tracts=[]
-  with gzip.open(file_name,'rt') as file:
+  with open(file_name,'rt') as file:
     for line in file:
       if line.startswith("##"):
         continue
