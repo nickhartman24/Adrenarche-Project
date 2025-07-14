@@ -438,8 +438,8 @@ while (stop < (last - args.window_size)):
         str(introgressed_bases / args.window_size)])
         outfile.write(outline + '\n')  # <-- Make sure you are writing to the output file
 
-    if args.haplotype:
-        for combo in haplotype_combinations:
+  if args.haplotype:
+    for combo in haplotype_combinations:
             results[combo] = calculate_introgression_stats(allele_sites[combo], statistics_list)
       #Get introgressed bases per window
       introgressed_bases=np.sum([number_intro_bases(window_start,window_stop,intro_tracts[0],intro_tracts[1]) for intro_tracts in introgressed_tracts[haplotype_combinations[combo][1]]])
