@@ -439,12 +439,12 @@ while (stop < (last - args.window_size)):
         outfile.write(outline + '\n')  # <-- Make sure you are writing to the output file
 
   if args.haplotype:
-    for combo in haplotype_combinations:
-            results[combo] = calculate_introgression_stats(allele_sites[combo], statistics_list)
+  for combo in haplotype_combinations:
+    results[combo] = calculate_introgression_stats(allele_sites[combo], statistics_list)
       #Get introgressed bases per window
-      introgressed_bases=np.sum([number_intro_bases(window_start,window_stop,intro_tracts[0],intro_tracts[1]) for intro_tracts in introgressed_tracts[haplotype_combinations[combo][1]]])
-      outline+="{}{}".format(outfile_delim, outfile_delim.join([combo, str(introgressed_bases), str(introgressed_bases / args.window_size)]))
-      outline+="{}{}".format(outfile_delim,outfile_delim.join([str(allele_sites[combo][allele_site]) for allele_site in allele_sites_list]+[str(results[combo][stat]) for stat in statistics_list]))
+    introgressed_bases=np.sum([number_intro_bases(window_start,window_stop,intro_tracts[0],intro_tracts[1]) for intro_tracts in introgressed_tracts[haplotype_combinations[combo][1]]])
+    outline+="{}{}".format(outfile_delim, outfile_delim.join([combo, str(introgressed_bases), str(introgressed_bases / args.window_size)]))
+    outline+="{}{}".format(outfile_delim,outfile_delim.join([str(allele_sites[combo][allele_site]) for allele_site in allele_sites_list]+[str(results[combo][stat]) for stat in statistics_list]))
   else:
     #Calculate the stats for the window
     intro_stats=calculate_introgression_stats(stats_components,statistics_list)
