@@ -349,8 +349,8 @@ while (stop < (last - args.window_size)):
   results=defaultdict(None)
   stats_components=defaultdict(int)
   #Get iterators for human and archaic vcfs
-  human_iterator = tb.query(args.chromosome,start,stop)
-  archaic_iterator = atb.query(args.chromosome,start,stop)
+  human_iterator = tb.query(str(args.chromosome), start, stop)
+  archaic_iterator = atb.query(str(args.chromosome), start, stop)
   for vcf_row in human_iterator:
     #Only SNPs
     if not (("VT=SNP" in vcf_row[info_index])&("AA=" in vcf_row[info_index])):
