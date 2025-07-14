@@ -120,9 +120,9 @@ def update_introgression_stats_sums(p_one,p_two,p_three,p_four,list):
     #fDM statistic
     dict["fdm_numerator"]=((1-p_one)*p_two*p_three*(1-p_four)) - (p_one*(1-p_two)*p_three*(1-p_four))
     #fDM has the same denominator as fD when p_two is greater than or equal to p3
-    if p_one>=p_two:
-      pd_m=max(p_two,p_three)
-      dict["fdm_denominator"]=((1-p_one)*pd_m*pd_m*(1-p_four))-(p_one*(1-pd_m)*pd_m*(1-p_four))
+  if p_one>=p_two:
+    pd_m=max(p_two,p_three)
+    dict["fdm_denominator"]=((1-p_one)*pd_m*pd_m*(1-p_four))-(p_one*(1-pd_m)*pd_m*(1-p_four))
     elif p_one<p_two:
       pd_m=max(p_one,p_three)
       dict["fdm_denominator"]=(pd_m*(1-p_two)*pd_m*(1-p_four))-((1-pd_m)*p_two*pd_m*(1-p_four))
