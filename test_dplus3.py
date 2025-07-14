@@ -370,8 +370,8 @@ while (stop < (last - args.window_size)):
     data[position]["human_reference"]=human_reference
     data[position]["human_alternative"]=human_alternative
     if args.haplotype:
-      data[position]["pop_one"]=vcf_row[human_individual_index_dict["p1"]]
-      data[position]["pop_two"]=vcf_row[human_individual_index_dict["p2"]]
+      data[position]["pop_one"]=vcf_row[human_individual_index_dict["p1"][0]]
+      data[position]["pop_two"]=vcf_row[human_individual_index_dict["p2"][0]]
     else:
       data[position]["pop_one_derived_freq"] =get_derived_freq_per_population(array=vcf_row[human_individual_index_dict["p1"]]
                     ,ancestral_allele=ancestral_allele,reference_allele=human_reference,alternative_allele=human_alternative)
@@ -397,7 +397,7 @@ while (stop < (last - args.window_size)):
     data[position]["archaic_reference"]=archaic_reference
     data[position]["archaic_alternative"]=archaic_alternative
     if args.haplotype:
-      data[position]["pop_three"]=vcf_row[archaic_individual_index_dict["p3"]]
+      data[position]["pop_three"]=vcf_row[archaic_individual_index_dict["p3"][0]]
     else:
       data[position]["pop_three_derived_freq"]=get_derived_freq_per_population(array=vcf_row[archaic_individual_index_dict["p3"]]
                     ,ancestral_allele=data[position]["ancestral_allele"],reference_allele=archaic_reference,alternative_allele=archaic_alternative)
