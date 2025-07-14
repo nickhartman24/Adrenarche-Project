@@ -8,7 +8,7 @@ import os
 from collections import defaultdict
 
 #FUNCTIONS
-def get_names_of_populations_dict(string,populations=["pop1","pop2","pop3","outgroup"]):
+def get_names_of_populations_dict(string,populations=["p1","p2","p3","outgroup"]):
   dict={}
   for pop in populations:
     search_string=r'{}\[(.*?)\]'.format(pop)
@@ -16,7 +16,7 @@ def get_names_of_populations_dict(string,populations=["pop1","pop2","pop3","outg
     dict[pop]=population_names #[header.index(ind) for ind in population_names]
   return(dict)
 
-def get_index_populations_dict(vcf_name,string,populations=["pop1","pop2","pop3"]):
+def get_index_populations_dict(vcf_name,string,populations=["p1","p2","p3"]):
   #Get header of names
   with gzip.open(vcf_name,'rt') as file:
     for line in file:
@@ -369,12 +369,12 @@ while (stop < (last - args.window_size)):
     data[position]["human_reference"]=human_reference
     data[position]["human_alternative"]=human_alternative
     if args.haplotype:
-      data[position]["pop_one"]=vcf_row[human_individual_index_dict["pop1"]]
-      data[position]["pop_two"]=vcf_row[human_individual_index_dict["pop2"]]
+      data[position]["pop_one"]=vcf_row[human_individual_index_dict["p1"]]
+      data[position]["pop_two"]=vcf_row[human_individual_index_dict["p2"]]
     else:
-      data[position]["pop_one_derived_freq"] =get_derived_freq_per_population(array=vcf_row[human_individual_index_dict["pop1"]]
+      data[position]["pop_one_derived_freq"] =get_derived_freq_per_population(array=vcf_row[human_individual_index_dict["p1"]]
                     ,ancestral_allele=ancestral_allele,reference_allele=human_reference,alternative_allele=human_alternative)
-      data[position]["pop_two_derived_freq"]=get_derived_freq_per_population(array=vcf_row[human_individual_index_dict["pop2"]]
+      data[position]["pop_two_derived_freq"]=get_derived_freq_per_population(array=vcf_row[human_individual_index_dict["p2"]]
                     ,ancestral_allele=ancestral_allele,reference_allele=human_reference,alternative_allele=human_alternative)
   #Positions for all four populations
       positions_list=[]
@@ -421,8 +421,8 @@ while (stop < (last - args.window_size)):
                                ,pop3_allele=pop_three_allele,pop4_allele=data[position]["ancestral_allele"])
         allele_sites[combo][site_pattern]+=1
     else:
-      intro_dict=update_introgression_stats_sums(p_one=pop_derived_freq["pop1"],p_two=pop_derived_freq["pop2"]
-                                           ,p_three=pop_derived_freq["pop3"],p_four=pop_derived_freq["outgroup"]
+      intro_dict=update_introgression_stats_sums(p_one=pop_derived_freq["p1"],p_two=pop_derived_freq["p2"]
+                                           ,p_three=pop_derived_freq["p3"],p_four=pop_derived_freq["outgroup"]
                                            ,list=statistics_list)
       stats_components={k: stats_components.get(k,0)+intro_dict.get(k,0) for k in intro_dict.keys()}
   #Next window if window empty
