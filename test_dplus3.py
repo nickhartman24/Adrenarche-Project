@@ -267,7 +267,7 @@ args=parser.parse_args()
 args.chromosome=22
 args.window_size=50000
 
-args.names_string="p1[NA06989.22.0]p2[HG00148]p3[Vindija33.19]"
+args.names_string="p1[NA06989]p2[HG00148]p3[Vindija33.19]"
 
 args.first_last_position_chromosome_file="/pl/active/villanea_lab/nickhart_data/dplus_test/first_last_position.csv"
 args.human_vcf="/pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/ALL.chr{}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz".format(args.chromosome)
