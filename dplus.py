@@ -1,3 +1,23 @@
+#This code is slightly modified from the original from 
+#https://github.com/David-Peede/Dplus/blob/main/human_neanderthal_application/code/human_neanderthal_window_calculations.py
+#and the paper "Leveraging shared ancestral variation to detect local introgression" Lesly Lopez Fang, Diego Ortega Del-Vecchyo, 
+#Emily Jane McTavish and Emilia Huerta-Sanchez.
+
+#Command to run script
+#python dplus.py \
+#--haplotype -haplotype_index 0_1 \
+#-o results.txt \
+#-human_infile /pl/active/villanea_lab/data/modern_data/1000_genomes/20130502/ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz \
+#-archaic_infile /pl/active/villanea_lab/data/archaic_data/vindija_VCF/ftp.eva.mpg.de/neandertal/Vindija/VCF/Vindija33.19/chr22_mq25_mapab100.vcf.gz \
+#-introgressed_infile /pl/active/villanea_lab/data/modern_data/steinrucken_neanderthal_SNP_calls/CEU_calls/CEU_lax_chr22_out.txt \
+#-chromosome 22 \
+#--window_size 50000 \
+#--d_statistic \
+#--dplus_statistic \
+#--position first_last_position.csv
+
+
+#Start of script
 import numpy as np
 import gzip
 import tabix
