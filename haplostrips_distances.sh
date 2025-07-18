@@ -1,21 +1,22 @@
-# This script uses HAPLOSTRIPS (https://bitbucket.org/dmarnetto/haplostrips/src/master/) 
-# as a preliminary test for Neanderthal introgression in a select group of genes. 
-# Written and executable in bash/shell. I conducted this in a conda environment
-# with Haplostrips software package (version 1.3; Marnetto & Huerta-Sánchez, 2017) implemented in Python 2.7.18. 
-# Haplostrips will produce many output files (.haps, .pdf, .dist.pdf, .distances_tab, .mat). 
-# The .pdf file creates a figure visualizing haplotypes of populations compared to a reference. 
-# necessary inputs include VCFs for each population. I used an integrated VCF for modern humans from the 1000 Genome Project, 
-# and a VCF for the Vindija Neanderthal. This script also requires a "samples_id.txt" (I called "samples_haplo") 
-# with all individuals(humans and Neanderthals) that you want to analyze. 
-# Samples_id.txt has two columns (sample_id and pop_code), tab separated and including headers. 
-# The .pdf creating aspect of Haplostrips is limited so a certain volume of populations, which is why this script splits the human populations into 
-# 3 groups, with Vindija Neanderthal in each run as the reference genome. 
-# Because African populations are not expected to be introgressed, I only used Yorubans (YRI) to reduce noise.
-# I also did not include ASW and ACB populations for the same reason. 
-# The last portion of this script combines the .distances_tab files for the 3 groups into one, and sorts individuals by distance from Neanderthal. 
-# A gene is considered potentially introgressed if (1) non-African individuals shared an identical haplotype with the Vindija Neanderthal (genetic distance = 0), 
-# and (2) all African individuals exhibited distinct haplotypes (genetic distance > 0) for the same region.
+"""
+This script uses HAPLOSTRIPS (https://bitbucket.org/dmarnetto/haplostrips/src/master/) as a preliminary test for Neanderthal introgression in a select group of genes. 
+Written and executable in bash/shell. I conducted this in a conda environment with Haplostrips software package (version 1.3; Marnetto & Huerta-Sánchez, 2017) implemented in Python 2.7.18. 
+Haplostrips will produce many output files (.haps, .pdf, .dist.pdf, .distances_tab, .mat). The .pdf file creates a figure visualizing haplotypes of populations compared to a reference. 
 
+Necessary inputs include VCFs for each population. I used an integrated VCF for modern humans from the 1000 Genome Project, 
+and a VCF for the Vindija Neanderthal. This script also requires a "samples_id.txt" (I called "samples_haplo") 
+with all individuals(humans and Neanderthals) that you want to analyze. 
+Samples_id.txt has two columns (sample_id and pop_code), tab separated and including headers. 
+
+The .pdf creating aspect of Haplostrips is limited so a certain volume of populations, which is why this script splits the human populations into 
+3 groups, with Vindija Neanderthal in each run as the reference genome. 
+
+Because African populations are not expected to be introgressed, I only used Yorubans (YRI) to reduce noise. I also did not include ASW and ACB populations for the same reason. 
+
+The last portion of this script combines the .distances_tab files for the 3 groups into one, and sorts individuals by distance from Neanderthal. 
+A gene is considered potentially introgressed if (1) non-African individuals shared an identical haplotype with the Vindija Neanderthal (genetic distance = 0), 
+and (2) all African individuals exhibited distinct haplotypes (genetic distance > 0) for the same region.
+"""
 
 #!/bin/bash
 
