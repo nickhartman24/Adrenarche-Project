@@ -1,7 +1,7 @@
-#This code is slightly modified from the original from 
-#https://github.com/David-Peede/Dplus/blob/main/human_neanderthal_application/code/human_neanderthal_window_calculations.py
-#and the paper "Leveraging shared ancestral variation to detect local introgression" Lesly Lopez Fang, Diego Ortega Del-Vecchyo, 
-#Emily Jane McTavish and Emilia Huerta-Sanchez.
+"""
+This code is slightly modified from the original from https://github.com/David-Peede/Dplus/blob/main/human_neanderthal_application/code/human_neanderthal_window_calculations.py 
+and the paper "Leveraging shared ancestral variation to detect local introgression" Lesly Lopez Fang, Diego Ortega Del-Vecchyo, Emily Jane McTavish and Emilia Huerta-Sanchez.
+"""
 
 #Command to run script
 #python dplus.py \
