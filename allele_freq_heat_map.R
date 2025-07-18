@@ -1,5 +1,7 @@
-# This script is designed to create a heat map in R, visualizing the proportion of humans in each 1000 Genomes Project 
-# superpopulation that has the Neanderthal/ALT allele at each position. 
+"""
+This script is designed to create a heat map in R, visualizing the proportion of humans in each 1000 Genomes Project 
+superpopulation that has the Neanderthal/ALT allele at each position. 
+"""
 
 # Load necessary libraries
 library(ggplot2)
