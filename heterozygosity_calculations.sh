@@ -1,11 +1,12 @@
-# This script has been created to quickly calculate heterozygosity rates for individuals in the 1000 Genomes Project for a select set of genes.
-# Input required for this script is a VCF of modern human genomes in the 1000 Genomes Project. 
-# This script provides outputs at multiple steps, including:
-# homozygosity rates for all individuals,
-# heterozygosity rates for all individuals, 
-# average homozygosity rate (one number), 
-# heterozygosity rates averaged by superpopulation (AFR, AMR, EUR, EAS, SAS). 
-
+"""
+This script has been created to quickly calculate heterozygosity rates for individuals in the 1000 Genomes Project for a select set of genes.
+Input required for this script is a VCF of modern human genomes in the 1000 Genomes Project. 
+This script provides outputs at multiple steps, including:
+- homozygosity rates for all individuals,
+- heterozygosity rates for all individuals, 
+- average homozygosity rate (one number), 
+- heterozygosity rates averaged by superpopulation (AFR, AMR, EUR, EAS, SAS). 
+"""
 
 #!/bin/bash
 
