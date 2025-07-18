@@ -7,7 +7,7 @@ chromosome = "chr18"
 gene_first_position = 71920750
 gene_last_position = 71959250
 
-input_file = f"/pl/active/villanea_lab/data/modern_data/steinrucken_neanderthal_SNP_calls/CEU_calls/CEU_lax_{chromosome}_out.txt"
+input_file = f"/pl/active/villanea_lab/data/modern_data/steinrucken_neanderthal_SNP_calls/{pop}_calls/CEU_lax_{chromosome}_out.txt"
 output_file = f"{chromosome}_{pop}_ratio_output.txt"
 filtered_file = f"{gene}_{pop}_ratio_output_filtered.txt"
 
