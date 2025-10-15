@@ -11,7 +11,8 @@ input_file = f"/pl/active/villanea_lab/data/modern_data/steinrucken_neanderthal_
 output_file = f"{chromosome}_{pop}_ratio_output.txt"
 filtered_file = f"{gene}_{pop}_ratio_output_filtered.txt"
 
-# Step 1: Convert individual probabilities to 1 (likely introgressed) and 0 (unlikely introgressed), with threshold of 0.89. Then create an output file that contains the percentage of “1” individuals out of the whole pop sample. 
+# Step 1: Convert individual probabilities to 1 (likely introgressed) and 0 (unlikely introgressed), with threshold of 0.89. 
+#Then create an output file that contains the percentage of “1” individuals out of the whole pop sample. 
 with open(input_file, newline='') as infile, open(output_file, "w", newline='') as outfile:
     reader = csv.reader(infile, delimiter='\t')
     writer = csv.writer(outfile, delimiter='\t')
@@ -36,7 +37,7 @@ with open(input_file, newline='') as infile, open(output_file, "w", newline='') 
         ratio = ones / n if n > 0 else 0
         writer.writerow([chrom, pos, "%.6f" % ratio])
 
-# Step 2: Filter the ratio output of the whole chromosome down to just the gene positions. This allows for quick reference to the gene, while still having the previous file for comparison to whole gene. 
+# Step 2: Filter the ratio output of the whole chromosome down to just the gene positions. This allows for quick reference to the gene, while still having the previous file for comparison to whole chromosome. 
 with open(output_file, newline='') as infile, open(filtered_file, "w", newline='') as outfile:
     reader = csv.reader(infile, delimiter='\t')
     writer = csv.writer(outfile, delimiter='\t')
